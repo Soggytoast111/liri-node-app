@@ -1,0 +1,11 @@
+[2019-04-29T12:11:53.426] [INFO] default - Invalid parameter!
+[2019-04-29T12:11:53.431] [INFO] default - Liri takes the following arguments:
+[2019-04-29T12:11:53.432] [INFO] default - node liri.js movie-this [movie name] -- search for movie info
+[2019-04-29T12:11:53.432] [INFO] default - node liri.js concert-this [band/artist name] -- search for concert events with specified band/artist
+[2019-04-29T12:11:53.433] [INFO] default - node liri.js spotify-this-song [song name] -- search spotify API for song info
+[2019-04-29T12:11:53.434] [INFO] default - node liri.js do-what-it-says [filename] -- takes parameters from plaintext file (divided by commas)
+[2019-04-29T12:12:40.936] [INFO] default - Song name:  Wouldn't It Be Nice - Stereo Mix
+[2019-04-29T12:12:40.940] [INFO] default - Artist1: The Beach Boys
+[2019-04-29T12:12:40.941] [INFO] default - Album:  Pet Sounds (Original Mono & Stereo Mix Versions)
+[2019-04-29T12:12:40.942] [INFO] default - Track released on:  1966-06-16
+[2019-04-29T12:12:40.942] [INFO] default - Preview URL:  null

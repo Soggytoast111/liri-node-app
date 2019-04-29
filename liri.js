@@ -5,8 +5,24 @@ var Spotify = require("node-spotify-api")
 var keys = require("./keys.js");
 var moment = require("moment")
 
+
 var prog = process.argv[2]
 var spotify = new Spotify(keys.spotify);
+
+var log4js = require('log4js');
+log4js.configure({
+  
+    appenders: {
+        cheeseLogs: { type: 'file', filename: 'log.txt' },
+        console: { type: 'console', layout: { type: 'dummy' } }
+      },
+     categories: {
+        default: { appenders: ['console', 'cheeseLogs'], level: 'trace' }
+    }
+
+})
+
+var logger = log4js.getLogger() 
 
 function liri(){
     if(prog == "movie-this") {
@@ -15,26 +31,26 @@ function liri(){
         
         axios.get(movieUrl).then(function(response){
             if (response.data.Title == null){
-                console.log("Movie not found!")
+                logger.info("Movie not found!")
             }
 
             else{
-                console.log("")
-                console.log(response.data.Title)
-                console.log("")
-                console.log("------------------")
-                console.log(response.data.Plot)
-                console.log("------------------")
-                console.log("Release Year:  " + response.data.Year)
+                logger.info("")
+                logger.info(response.data.Title)
+                logger.info("")
+                logger.info("------------------")
+                logger.info(response.data.Plot)
+                logger.info("------------------")
+                logger.info("Release Year:  " + response.data.Year)
                 
                 if (response.data.Ratings[0] != null) {
-                    console.log("IMDB Rating:  " + response.data.Ratings[0].Value)
-                    console.log("ROTTEN Tomatoes Rating:  " + response.data.Ratings[1].Value)
+                    logger.info("IMDB Rating:  " + response.data.Ratings[0].Value)
+                    logger.info("ROTTEN Tomatoes Rating:  " + response.data.Ratings[1].Value)
                 }
 
-                console.log("Country of Origin:  " + response.data.Country)
-                console.log("Language:  " + response.data.Language)
-                console.log("Actors:  "+ response.data.Actors)
+                logger.info("Country of Origin:  " + response.data.Country)
+                logger.info("Language:  " + response.data.Language)
+                logger.info("Actors:  "+ response.data.Actors)
             }
         })
     }
@@ -49,15 +65,15 @@ function liri(){
                 response.data[0].venue.name == null ||
                 response.data[0].venue.country == null
             ){
-                console.log("Band/Artist not found!")
+                logger.info("Band/Artist not found!")
             }
 
             else{
                 for (i=0; i<response.data.length; i++){  
-                    console.log(moment(response.data[i].datetime).format("MM/DD/YYYY"))
-                    console.log("Venue:  " + response.data[i].venue.name)
-                    console.log("Location:  " + response.data[i].venue.city + ", " + response.data[i].venue.country)
-                    console.log("--------------------------")
+                    logger.info(moment(response.data[i].datetime).format("MM/DD/YYYY"))
+                    logger.info("Venue:  " + response.data[i].venue.name)
+                    logger.info("Location:  " + response.data[i].venue.city + ", " + response.data[i].venue.country)
+                    logger.info("--------------------------")
                 }
             }
         })
@@ -69,18 +85,18 @@ function liri(){
         var songName = process.argv[3]
         spotify.search({ type: 'track', query: songName }, function(err, data) {
             if (err) {
-            return console.log("Song not found!");
+            return logger.info("Song not found!");
             }
 
 
-        console.log("Song name:  " + data.tracks.items[0].name)
+        logger.info("Song name:  " + data.tracks.items[0].name)
         
         for (i=0; i<data.tracks.items[0].artists.length; i++){
-            console.log("Artist" + (i + 1) + ": " + data.tracks.items[0].artists[i].name) 
+            logger.info("Artist" + (i + 1) + ": " + data.tracks.items[0].artists[i].name) 
         }
-        console.log("Album:  " + data.tracks.items[0].album.name)
-        console.log("Track released on:  " + data.tracks.items[0].album.release_date)
-        console.log("Preview URL:  " + data.tracks.items[0].preview_url)
+        logger.info("Album:  " + data.tracks.items[0].album.name)
+        logger.info("Track released on:  " + data.tracks.items[0].album.release_date)
+        logger.info("Preview URL:  " + data.tracks.items[0].preview_url)
         })
     }
 
@@ -89,7 +105,7 @@ function liri(){
         fs.readFile(filename, 'utf8', (err, data) => {
             if (err) throw err;
             data = data.split(",")
-            console.log(data);
+            logger.info(data);
             prog = data[0]
             process.argv[3] = data[1]
             liri()
@@ -98,12 +114,12 @@ function liri(){
     }
 
     else {
-        console.log("Invalid parameter!")
-        console.log("Liri takes the following arguments:")
-        console.log("node liri.js movie-this [movie name] -- search for movie info")
-        console.log("node liri.js concert-this [band/artist name] -- search for concert events with specified band/artist")
-        console.log("node liri.js spotify-this-song [song name] -- search spotify API for song info")
-        console.log("node liri.js do-what-it-says [filename] -- takes parameters from plaintext file (divided by commas)")
+        logger.info("Invalid parameter!")
+        logger.info("Liri takes the following arguments:")
+        logger.info("node liri.js movie-this [movie name] -- search for movie info")
+        logger.info("node liri.js concert-this [band/artist name] -- search for concert events with specified band/artist")
+        logger.info("node liri.js spotify-this-song [song name] -- search spotify API for song info")
+        logger.info("node liri.js do-what-it-says [filename] -- takes parameters from plaintext file (divided by commas)")
     }
 }
 
